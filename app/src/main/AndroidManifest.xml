@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".EditFieldClass" />
-        <activity android:name=".EditMessage"></activity>
+        <activity android:name=".EditMessage" />
     </application>
 
 </manifest>

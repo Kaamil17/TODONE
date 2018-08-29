@@ -1,14 +1,25 @@
 package com.example.asusrg.todone;
 
+import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
     ListView listView;
@@ -22,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         listView = findViewById(R.id.listView);
+
         arrayList = new ArrayList<>();
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList);
         listView.setAdapter(arrayAdapter);
@@ -35,6 +47,30 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, Intent_Constants.INTENT_REQUEST_CODE_TWO);
             }
         });
+
+        try {
+            Scanner scanner = new Scanner(openFileInput("Todo.txt"));
+            while (scanner.hasNextLine()) {
+                String data = scanner.nextLine();
+                arrayAdapter.add(data);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        try {
+            PrintWriter printWriter = new PrintWriter(openFileOutput("Todo.txt", Context.MODE_PRIVATE));
+            for (String data : arrayList) {
+                printWriter.println(data);
+            }
+            printWriter.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        finish();
     }
 
     public void floatingButtonClickListener(View view) {
